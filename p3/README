@@ -1,0 +1,65 @@
+CMP SCI 4760 Operating Systems Project 3
+********************************************************************************
+Description
+The goal of this program is to become familiar with the use of semaphores. The 
+program reads strings from an input file into shared memory. The program then 
+forks off children to read an assigned set of strings from shared memory and 
+determine if they are palindromes. The child writes the strings to their 
+respective output file (palin.out or nopalin.out) which is protected using a 
+semaphore.
+
+Additional Info
+- No more than 20 children will exist in the system at a time.
+- Program terminates after 120 real life seconds, killing child processes, 
+  cleaning shared memory, and unlinking the semaphore.
+- Program will catch the SIGINT signal (^C on Linux/Unix) and terminate, killing
+  child processes, cleaning shared memory, and unlinking the semaphore.
+- Program reads entire line of input file as a single string
+- The children are fed indexes starting at the end of the array and works down 
+  to 0. This is so the children can know to stop processing strings by just 
+  checking if the index < 0.  
+- Each child will handle 5 strings max. The amount of children that 
+  will spawn = (x + 4)/5 where x = the number of strings to process. 
+  Ex: In the sample file below 6 strings will need to be processed. The amount 
+  of children needed to handle 6 strings = (6+4)/5 = 2. Child 1 will handle 5 
+  strings and child 2 will handle 1 string.
+
+This program can take options that are processed using getopt()
+The following options are accepted:
+    
+  -h            : to display a help message
+  -f filename   : to designate the input file
+  -n x          : x = the amount of children allowed to exist at one time
+  
+Example Files
+Input:
+
+string1
+string2
+this also is one string
+palindromemordnilap
+not a palindrome
+also4palin nilap4osla
+
+Output: 
+palin.out:
+PID    IND STRING
+11111  005 also4palin nilap4osla
+11111  003 palindromemordnilap
+
+nopalin.out:
+PID    IND STRING
+11112  000 string1
+11111  002 this is also one string
+11111  001 string2
+
+How to Compile and Execute:
+
+  make
+  ./master
+    OR
+  ./master opts*
+  
+  *any combination of the options listed above
+
+********************************************************************************

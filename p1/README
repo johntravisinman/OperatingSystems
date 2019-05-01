@@ -1,0 +1,125 @@
+Project 1 for CMP SCI 4760 Operating Systems
+
+This program uses child processes to read an input file and reverse the list of numbers in the input file.
+The process id that handled the specific list of numbers is printed to an output file followed by the reversed list of numbers.
+
+This program can take options that are processed using getopt()
+The following options are allowed:
+    
+    -h            : to display this help message
+    -i 'filename' : to designate the input file
+    -o 'filename' : to designate the output file
+
+If no options are given then the following default file names are used:
+    
+    INPUT:  input.dat
+    OUTPUT: output.dat
+
+Expected input file format is as follows:
+
+    # of forks and list of numbers
+    # of numbers on the following line to read
+    # # # # # etc
+    etc
+
+Example
+
+    3
+    4
+    1 2 3 4
+    7
+    1 3 5 7 9 11 13
+    5
+    1 2 4 8 16
+
+How to execute:
+
+    Compile using 'make'
+
+    To use default filenames:
+        ./logParse
+
+    To use custom input file:
+        ./logParse -i filename
+
+    To use custom output file:
+        ./logParse -o filename
+
+    To use custom input and output files:
+        ./logParse -i infile -o outfile
+
+
+* * * * * * * * * *Assignment Description* * * * * * * * * *
+
+Unix System Calls and Library Functions
+
+The goal of this homework is to become familiar with the environment in hoare while practicing system calls. 
+We will be using getopt and perror as well as fork(). Your project should consist of one program, which will fork off versions 
+of itself to do some file processing. To do this, it will start by taking some command line arguments. You must implement at 
+least the following command line arguments using getopt:
+    
+    -h
+    -i inputfilename
+    -o outputfilename
+
+The -h option should display all legal command line options and how it is expected to run, as well as the default behavior. 
+If input and output filenames are not specified, the defaults should be input.dat and output.dat. Once you have parsed the 
+command  line arguments and validated them, then you should attempt to open the inputfile.  It will start with a number on 
+a line by itself, with that number indicating the amount of times you will be required to do a task with copies of your process 
+using fork. Each task list will follow in the file, which will consist of an integer on one line (representing the amount of 
+numbers that will follow) and that amount of numbers. 
+
+An example of this input file is below:
+
+    3
+    6
+    3 6 107 8 1 3 
+    4
+    1 3 50 4
+    7
+    5 3 5 7 8 9 1
+
+The original process should read the first line of the file.  Once it has read that line, it should then go into a loop based 
+on that number, with each iteration of the loop forking off a copy that will then process the next two lines. Once that child 
+has finished its work (defined below), it will write some data to the outputfile and then terminate. At that point, when the 
+parent detects its child has terminated, it should do another iteration of the loop until done. After all children have 
+terminated. the parent should write the pids of all of its children that it launched, as well as its own pid to the output 
+file. When a child process starts, it should read the next line of the file, which will tell it how many numbers to read 
+afterwards. We see in our example file that the first forked child would read a 6. It should then read that number of integers 
+and put them into a stack.  Once you have put all of the numbers into a stack, the child should write its PID to the output 
+file, followed by those numbers in reverse order. For example:
+
+    13278: 7 3 1 8 107 6 3
+
+After this has been done with the example file given above, we would expect an output file to look as below:
+
+    13278: 7 3 1 8 107 6 3
+    13281: 4 50 3 1
+    13294: 1 9 8 7 5 3 5
+    All children were: 13278 13281 1329
+
+I’ll like some meaningful error messages. The format for error messages should be:
+
+    logParse: Error: Detailed error message
+
+where logParse is actually the name of the executable (argv[0]) that you are trying to execute. These error messages should be 
+sent to stderr using perror.
+
+It is required for this project that you use version control, a Makefile and a README. Your README file should consist at a 
+minimum of a description of how I should compile and run your project, any outstanding problems that it still has, and any 
+problems you encountered. Your Makefile should have an option to clean up object files.
+
+What to handin
+Handin an electronic copy of all the sources, README, Makefile(s), and a log of your revisions using your version control 
+software. Create your programs in a directory called username.1 where username is your login name on hoare. Once you are done 
+with everything, remove the executables and object files, and issue the following commands:
+    
+    chmod 700 username.1
+    cp -p -r username.1 /home/hauschild/cs4760/assignment1
+
+I want to see the log of when your program files were changed.  You should check in the files at least once a day while you are 
+working on them. Omission of a Makefile will result in a loss of another 10 points, while an insufficient README will cost you 
+5 points. I do not like to see any extensions on Makefile and README files. Before the final submission, perform a make clean 
+and keep the latest source checked out in your directory. You do not have to hand in a hard copy of the project. 
+
+Assignment is due by 11:59pm on the due date.

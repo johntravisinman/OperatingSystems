@@ -1,0 +1,66 @@
+CMP SCI 4760 Operating Systems Project 5
+********************************************************************************
+Description
+This project simulates resource management in an operating system. 
+
+OSS
+The main program (oss) starts by getting checking if the user has provided any 
+arguments. The allowed argumetns are listed below and when the program is given 
+the -h argument. Then oss loads two structures into shared memory, a simulated 
+clock and a structure to dscribe the resources in the system. Then it enters an 
+infinite loop where it will only terminate after 2 real life seconds. In the 
+loop it will spawn processess at random intervals between 0 and 500ms. If it is
+not spawning a child then it is checking a message queue for messages from the 
+children. The message will be a request for a resource, a release of a resouce, 
+or signalling normal termination. If oss cannot satisify a request then a deny 
+message is sent to the child and the child waits for another message. The other
+message types are straightforward in that the release and terminates are always
+satisfied. Every simulated second oss checks for deadlock. If a deadlock is 
+detected then the processes which are deadlocked are terminated.
+
+User
+The user begins by attaching to the simulated clock. It then enters a loop
+sending messages of random types to oss. As long as all requests are satisfied
+then user will continue looping until it randomly decides to terminate In which
+case it sends a message indicating it is terminating. If a request is denied then
+it will wait to be granted the resource by waiting to receive a message from oss.
+
+MESSAGING RULES USED IN THIS PROJECT 
+ - messages are always sent to specific processes using mtype
+ - mtype is the process id of the message receiver in this case oss will have 
+   a pseudo-process id of 1 
+ - therefore when sending a message to oss mtype will be 1
+ - oss will only receive messages of mtype 1
+ - children will use there real process ids
+ - meaning they will only receive messages whose mtype = their pid 
+ - msg.sender is the message sender
+
+This program can take options that are processed using getopt()
+The following options are accepted:
+    
+  -h           : to display a help message
+  -o filename  : to designate the log file
+  -n x         : x = the max amount of concurrent child processes
+  -v           : to have verbose printing
+
+
+
+Default values: 
+ n = 18
+ log file = log.txt
+ verbose = FALSE
+
+Logging
+If -v option is given then all actions relevant to the simulation are logged.
+If the option is not given then only deadlock messages are logged.
+The program will stop writing to the log file after ~100000 lines.
+ 
+How to Compile and Execute:
+
+  make
+  ./oss
+    OR
+  ./oss opts*
+  
+  *any combination of the options listed above
+********************************************************************************
