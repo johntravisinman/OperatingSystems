@@ -2,8 +2,8 @@
 #define MSG_H
 
 typedef struct {
-    long mtype;
-    int pid;
+  long mtype;
+  int pid;
 } msg_t;
 
 #endif
