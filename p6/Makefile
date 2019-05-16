@@ -4,7 +4,7 @@ CFLAGS = -g -Wall -lm
 OSS = oss
 USER = user
 
-all: oss
+all: oss user
 
 oss: main.o
 	$(CC) $(CFLAGS) -o $(OSS) main.o
